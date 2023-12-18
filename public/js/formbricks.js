@@ -9,8 +9,9 @@
   window.addEventListener("load", function () {
     setTimeout(function () {
       window.formbricks.init({
-        environmentId: myPluginSettings.environmentId,
-        apiHost: myPluginSettings.apiHost,
+        environmentId: formbricksPluginSettings.environmentId,
+        apiHost: formbricksPluginSettings.apiHost,
+        debug: formbricksPluginSettings.debug,
       });
     }, 500);
   });

@@ -119,7 +119,7 @@ function formbricks_settings_page_content() {
             <tr valign="top">
                 <th scope="row">Debug:</th>
                 <td>
-                    <input type="checkbox" name="formbricks_debug" <?php checked(get_option('formbricks_debug'), 'on'); ?> />
+                    <input type="checkbox" name="formbricks_debug" id="formbricks_debug" <?php checked(get_option('formbricks_debug'), 'on'); ?> />
                 </td>
             </tr>
             <tr valign="top">
@@ -194,7 +194,7 @@ function formbricks_settings_page_content() {
 function formbricks_register_settings() {
     register_setting('formbricks_settings_group', 'formbricks_environment_id', 'sanitize_text_field');
     register_setting('formbricks_settings_group', 'formbricks_api_host', 'esc_url_raw');
-    register_setting('formbricks_settings_group', 'formbricks_debug', 'esc_attr');
+    register_setting('formbricks_settings_group', 'formbricks_debug');
 }
 
 add_action('admin_menu', 'formbricks_admin_settings_page');
@@ -206,18 +206,17 @@ function formbricks_enqueue_script() {
         wp_enqueue_script(
             'formbricks-script',
             plugin_dir_url(__FILE__) . 'public/js/formbricks.js',
-            array('jquery'), // Add any dependencies
-            '1.0', // Your script version
+            array('jquery'),
+            '1.0.0',
             true // Load script in the footer
         );
 
-        // Pass the environmentId and apiHost values to the script
-        
-
-        wp_localize_script('formbricks-script', 'myPluginSettings', array(
+        // Pass the environmentId and apiHost, debug values to the script
+        wp_localize_script('formbricks-script', 'formbricksPluginSettings', array(
             'environmentId' => get_option('formbricks_environment_id'),
             'apiHost' => get_option('formbricks_api_host'),
-        )); // Use 'myPluginSettings' here
+            'debug' => json_encode(get_option('formbricks_debug') == 'on' ? true : false),
+        ));
     }
 }
 
