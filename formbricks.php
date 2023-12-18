@@ -133,8 +133,8 @@ function formbricks_settings_page_content() {
 
 
 function formbricks_register_settings() {
-    register_setting('formbricks_settings_group', 'formbricks_environment_id');
-    register_setting('formbricks_settings_group', 'formbricks_api_host');
+    register_setting('formbricks_settings_group', 'formbricks_environment_id', 'sanitize_text_field');
+    register_setting('formbricks_settings_group', 'formbricks_api_host', 'esc_url_raw');
 }
 
 add_action('admin_menu', 'formbricks_admin_settings_page');
