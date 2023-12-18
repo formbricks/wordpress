@@ -24,6 +24,6 @@ or Upload the whole folder to wp-contents > plugins folder
 
 == Changelog ==
 
-= 0.1.0
+= 1.0.0
 
 - Basic version

@@ -2,14 +2,14 @@
 
 /**
  *
- * @link              https://github.com/mcnaveen/formbricks-wp
- * @since             0.1.0
+ * @link              https://github.com/formbricks/wordpress
+ * @since             1.0.0
  * @package           Formbricks
  *
  * @wordpress-plugin
  * Plugin Name:       Formbricks
  * Plugin URI:        https://formbricks.com
- * Description:       Test desc
+ * Description:       WordPress Plugin for Formbricks | An open source Survey toolbox
  * Version:           1.0.0
  * Author:            mcnaveen
  * Author Email:	  me@mcnaveen.com
@@ -97,29 +97,88 @@ function formbricks_settings_page_content() {
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
     }
     ?>
-    <div class="wrap">
-        <h2>Formbricks Settings</h2>
-        <p>You can find Environment ID and Host under <a href="https://formbricks.com/docs" target="_blank">Settings > Setup Checklist</a>.</p>
-        <form method="post" action="options.php">
-            <?php settings_fields('formbricks_settings_group'); ?>
-            <?php do_settings_sections('formbricks-settings'); ?>
-            <table class="form-table">
-                <tr valign="top">
-                    <th scope="row">Environment ID:</th>
-                    <td>
-                        <input type="text" name="formbricks_environment_id" value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" style="width: 50%;" />
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">API Host:</th>
-                    <td>
-                        <input type="text" name="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" style="width: 50%;" />
-                    </td>
-                </tr>
-            </table>
-            <input type="submit" class="button-primary" value="Save Changes">
-        </form>
-    </div>
+   <div class="wrap">
+    <h2>Formbricks Settings</h2>
+    <p>You can find Environment ID and Host under <a href="https://formbricks.com/docs/getting-started/framework-guides#prerequisites" target="_blank">Settings > Setup Checklist.</a> | Connect with Community on <a href="https://formbricks.com/discord" target="_blank">Discord</a></p>
+    <form method="post" action="options.php">
+        <?php settings_fields('formbricks_settings_group'); ?>
+        <?php do_settings_sections('formbricks-settings'); ?>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row">Environment ID:</th>
+                <td>
+                    <input type="text" name="formbricks_environment_id" id="formbricks_environment_id" value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" style="width: 50%;" />
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">API Host:</th>
+                <td>
+                    <input type="text" name="formbricks_api_host" id="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" style="width: 50%;" />
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">Debug:</th>
+                <td>
+                    <input type="checkbox" name="formbricks_debug" <?php checked(get_option('formbricks_debug'), 'on'); ?> />
+                </td>
+            </tr>
+            <tr valign="top">
+            <th scope="row"></th>
+                <td colspan="2">
+                    <button type="button" id="formbricks-test-ping" class="button" style="border: #02d9c7 1px solid; color: black">Check Connection</button>
+                    <input type="submit" class="button-primary" value="Save Changes" id="formbricks-save-changes" disabled style="background-color: #02d9c7; color: black">
+                </td>
+            </tr>
+            <tr valign="top">
+            <th scope="row"></th>
+                <td colspan="2" style="padding-left: 10px;">
+                    <span id="formbricks-ping-result"></span>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+    <script>
+    jQuery(document).ready(function($) {
+    $('#formbricks-test-ping').on('click', function() {
+        var environmentId = $('#formbricks_environment_id').val();
+        var apiHost = $('#formbricks_api_host').val();
+        apiHost = apiHost.replace(/\/$/, '');
+
+        if (environmentId && apiHost) {
+            $.ajax({
+                url: apiHost + '/api/v1/client/' + environmentId + '/in-app/sync',
+                type: 'GET',
+                dataType: 'json', // Specify JSON dataType
+                success: function(response) {
+                    handlePingResponse(response);
+                },
+                error: function(xhr, status, error) {
+                    $('#formbricks-ping-result').html('<span style="color: red;">Test Request Failed! Make sure both field values are correct!0</span>');
+                    $('#formbricks-save-changes').prop('disabled', true);
+                }
+            });
+        } else {
+            $('#formbricks-ping-result').html('<span style="color: red;">Please enter Environment ID and API Host!</span>');
+            $('#formbricks-save-changes').prop('disabled', true);
+        }
+    });
+
+    function handlePingResponse(response) {
+        if (response && response.data && response.data.product) {
+            $('#formbricks-ping-result').html('<span style="color: green;">Test Request Success! Click the Save Changes Button</span>');
+            $('#formbricks-save-changes').prop('disabled', false);
+        } else {
+            $('#formbricks-ping-result').html('<span style="color: red;">Error: Invalid response format!</span>');
+            $('#formbricks-save-changes').prop('disabled', true);
+        }
+    }
+});
+
+    </script>
+
+
     <script>
         // JavaScript to hide the settings saved alert after a few seconds
         jQuery(document).ready(function($) {
@@ -135,6 +194,7 @@ function formbricks_settings_page_content() {
 function formbricks_register_settings() {
     register_setting('formbricks_settings_group', 'formbricks_environment_id', 'sanitize_text_field');
     register_setting('formbricks_settings_group', 'formbricks_api_host', 'esc_url_raw');
+    register_setting('formbricks_settings_group', 'formbricks_debug', 'esc_attr');
 }
 
 add_action('admin_menu', 'formbricks_admin_settings_page');
