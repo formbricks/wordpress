@@ -96,8 +96,12 @@ class Formbricks_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/formbricks.js', array( 'jquery' ), $this->version, false );
-
+		 $environment_id = get_option('formbricks_environment_id');
+		 $api_host = get_option('formbricks_api_host');
+		 
+		 if (!empty($environment_id) && !empty($api_host)) {
+			 wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/formbricks.js', array('jquery'), $this->version, false);
+		 }
 	}
 
 }

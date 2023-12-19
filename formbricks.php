@@ -78,7 +78,6 @@ function run_formbricks() {
 run_formbricks();
 
 
-// Create the admin settings page
 function formbricks_admin_settings_page() {
 
     add_menu_page(
@@ -87,13 +86,12 @@ function formbricks_admin_settings_page() {
         'manage_options',
         'formbricks-settings',
         'formbricks_settings_page_content',
+        plugin_dir_url(__FILE__) . 'public/formbricks.svg',
     );
 }
 
 function formbricks_settings_page_content() {
-    // Check if the form has been submitted and settings have been saved
     if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
-        // Display a success message
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
     }
     ?>
@@ -180,11 +178,10 @@ function formbricks_settings_page_content() {
 
 
     <script>
-        // JavaScript to hide the settings saved alert after a few seconds
         jQuery(document).ready(function($) {
             setTimeout(function() {
                 $('#formbricks-settings-saved').fadeOut('slow');
-            }, 5000); // 5000 milliseconds = 5 seconds (adjust as needed)
+            }, 5000); 
         });
     </script>
     <?php
@@ -202,21 +199,28 @@ add_action('admin_init', 'formbricks_register_settings');
 
 // Enqueue JavaScript on the frontend
 function formbricks_enqueue_script() {
-    if (!is_admin()) { // Load only on the frontend
-        wp_enqueue_script(
-            'formbricks-script',
-            plugin_dir_url(__FILE__) . 'public/js/formbricks.js',
-            array('jquery'),
-            '1.0.0',
-            true // Load script in the footer
-        );
+    if (!is_admin()) { 
+        // Get options
+        $environmentId = get_option('formbricks_environment_id');
+        $apiHost = get_option('formbricks_api_host');
+        $debug = boolval(get_option('formbricks_debug') == 'on');
 
-        // Pass the environmentId and apiHost, debug values to the script
-        wp_localize_script('formbricks-script', 'formbricksPluginSettings', array(
-            'environmentId' => get_option('formbricks_environment_id'),
-            'apiHost' => get_option('formbricks_api_host'),
-            'debug' => json_encode(get_option('formbricks_debug') == 'on' ? true : false),
-        ));
+
+        if (!empty($environmentId) && !empty($apiHost)) {
+            wp_enqueue_script(
+                'formbricks-script',
+                plugin_dir_url(__FILE__) . 'public/js/formbricks.js',
+                array('jquery'),
+                '1.0.0',
+                true // Load script in the footer
+            );
+
+            wp_localize_script('formbricks-script', 'formbricksPluginSettings', array(
+                'environmentId' => $environmentId,
+                'apiHost' => $apiHost,
+                'debug' => boolval($debug)
+            ));
+        }
     }
 }
 
