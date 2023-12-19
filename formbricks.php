@@ -224,6 +224,4 @@ function formbricks_enqueue_script() {
     }
 }
 
-
-
 add_action('wp_enqueue_scripts', 'formbricks_enqueue_script');
