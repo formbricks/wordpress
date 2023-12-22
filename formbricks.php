@@ -200,8 +200,8 @@ function formbricks_settings_page_content()
     <script>
         jQuery(document).ready(function($) {
             // Function to handle ping response and update UI
-            function handlePingResponse(response, debugMode) {
-                var enableSaveChanges = response && response.data && response.data.product || debugMode;
+            function handlePingResponse(response) {
+                var enableSaveChanges = response && response.data && response.data.product;
 
                 $('#formbricks-ping-result').html(enableSaveChanges ?
                     '<span style="color: green;">Test Request Success! Click the Save Changes Button</span>' :
@@ -231,7 +231,7 @@ function formbricks_settings_page_content()
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            handlePingResponse(response, debugMode);
+                            handlePingResponse(response);
                         },
                         error: function(xhr, status, error) {
                             handlePingError();
