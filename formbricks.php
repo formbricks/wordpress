@@ -101,74 +101,84 @@ function formbricks_settings_page_content()
 ?>
     <div class="wrap">
         <h2>Formbricks Settings</h2>
-        <p>Connect with Community on <a href="https://formbricks.com/discord" target="_blank">Discord</a></p>
 
-        <!-- Global Settings -->
-        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom:10px">
-            <form method="post" action="options.php">
-                <?php settings_fields('formbricks_toggle_group'); ?>
-                <?php do_settings_sections('formbricks-toggle'); ?>
-                <h4>Global Settings</h4>
-                <table class="form-table">
-                    <tr valign="top">
-                        <td>
-                            <label>
-                                <input type="checkbox" name="formbricks_global_toggle" <?php checked(get_option('formbricks_global_toggle'), 'on'); ?> />
-                                Enable Formbricks globally
-                            </label>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <td>
-                            <input type="submit" class="button-primary" value="Save Changes" />
-                        </td>
-                    </tr>
-                </table>
-            </form>
+        <!-- Setup Checklist -->
+        <div class="container">
+            <h3>Setup Checklist</h3>
+            <p>To run targeted surveys on your website, you need to complete the following steps:</p>
+
+            <ul>
+                <li>1. Free Formbricks Account (No Credit Card Needed) <a href="https://app.formbricks.com/auth/signup" target="_blank">Signup here</a></li>
+                <li>2. The <b>environment ID</b> of your account. You find it in your Formbricks account settings under "Setup Checklist"</li>
+                <li>3. The <b>API Host</b> When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only when you self-host Formbricks, it would be different</li>
+                <li>4. Here is a <a href="https://formbricks.com/docs/getting-started/framework-guides#prerequisites" target="_blank">detailed guide</a> on how to get started</li>
+            </ul>
         </div>
 
         <!-- Configuration -->
-        <div style="border: 1px solid #ddd; padding: 10px;">
+        <div class="container">
             <form method="post" action="options.php">
                 <?php settings_fields('formbricks_settings_group'); ?>
                 <?php do_settings_sections('formbricks-settings'); ?>
-                <h4>Configuration</h4>
-                <p>You can find Environment ID and Host under <a href="https://formbricks.com/docs/getting-started/framework-guides#prerequisites" target="_blank">Settings > Setup Checklist</a></p>
-                <table class="form-table">
-                    <tr valign="top">
-                        <th scope="row">Environment ID:</th>
-                        <td>
-                            <input type="text" name="formbricks_environment_id" id="formbricks_environment_id" value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" style="width: 50%;" />
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">API Host:</th>
-                        <td>
-                            <input type="text" name="formbricks_api_host" id="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" style="width: 50%;" />
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">Debug:</th>
-                        <td>
+                <h3>Configuration</h3>
+
+                <div>
+                    <div>
+                        <b>Environment ID</b>
+                        <p>You can find your environment ID in your Formbricks account under "Setup Checklist". It looks like: clmyq4k....</p>
+                        <input type="text" name="formbricks_environment_id" id="formbricks_environment_id" value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" />
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <b>API Host</b>
+                        <p>When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only when you self-host Formbricks, it would be different</p>
+                        <input type="text" name="formbricks_api_host" id="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" />
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <b>Debug Mode</b>
+                        <p>If you toggle on Debug Mode, Formbricks will log everything it does in the browser console. Only activate this for testing purposes.</p>
+                        <label class="toggle-switch">
                             <input type="checkbox" name="formbricks_debug" id="formbricks_debug" <?php checked(get_option('formbricks_debug'), 'on'); ?> />
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"></th>
-                        <td colspan="2">
-                            <button type="button" id="formbricks-test-ping" class="button" style="border: #02d9c7 1px solid; color: black">Check Connection</button>
-                            <input type="submit" class="button-primary" value="Save Changes" id="formbricks-save-changes" disabled style="background-color: #02d9c7; color: black">
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <td colspan="2" style="padding-left: 10px;">
-                            <span id="formbricks-ping-result"></span>
-                        </td>
-                    </tr>
-                </table>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button type="button" id="formbricks-test-ping" class="test-button">Check Connection</button>
+                        <button type="submit" id="formbricks-save-changes" class="save-button" disabled>Save Changes</button>
+                        <p id="formbricks-ping-result"></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Enable Formbricks -->
+        <div class="container">
+            <form method="post" action="options.php">
+                <?php settings_fields('formbricks_toggle_group'); ?>
+                <?php do_settings_sections('formbricks-toggle'); ?>
+                <h3>Enable Formbricks</h3>
+                <!-- Show Formbricks is enabled or not -->
+                <p>
+                    <b>Formbricks is currently: </b>
+                    <?php
+                    $globalToggle = get_option('formbricks_global_toggle');
+                    if ($globalToggle == 'on') {
+                        echo '<span style="color: green;">Enabled ✅</span>';
+                    } else {
+                        echo '<span style="color: red;">Disabled ❌</span>';
+                    }
+                    ?>
+                </p>
+                <label class="toggle-switch">
+                    <input type="checkbox" name="formbricks_global_toggle" <?php checked(get_option('formbricks_global_toggle'), 'on'); ?> />
+                    <span class="slider"></span>
+                </label>
+                <div style="margin-top: 20px;">
+                    <input type="submit" class="save-button" value="Save Changes" />
+                </div>
             </form>
         </div>
     </div>
+
 
     <script>
         jQuery(document).ready(function($) {
@@ -272,8 +282,9 @@ function formbricks_enqueue_script()
                     'debug' => boolval($debug)
                 ));
             }
+        } else {
+            // Formbricks is disabled
         }
     }
 }
-
 add_action('wp_enqueue_scripts', 'formbricks_enqueue_script');

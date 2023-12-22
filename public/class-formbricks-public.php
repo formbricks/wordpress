@@ -20,7 +20,8 @@
  * @subpackage Formbricks/public
  * @author     mcnaveen <me@mcnaveen.com>
  */
-class Formbricks_Public {
+class Formbricks_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Formbricks_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Formbricks_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Formbricks_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/formbricks-public.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/formbricks-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,26 +83,28 @@ class Formbricks_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
+		$globalToggle = get_option('formbricks_global_toggle');
+		if (!empty($globalToggle) && $globalToggle == 'on') {
+			/**
+			 * This function is provided for demonstration purposes only.
+			 *
+			 * An instance of this class should be passed to the run() function
+			 * defined in Formbricks_Loader as all of the hooks are defined
+			 * in that particular class.
+			 *
+			 * The Formbricks_Loader will then create the relationship
+			 * between the defined hooks and the functions defined in this
+			 * class.
+			 */
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Formbricks_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Formbricks_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+			$environment_id = get_option('formbricks_environment_id');
+			$api_host = get_option('formbricks_api_host');
 
-		 $environment_id = get_option('formbricks_environment_id');
-		 $api_host = get_option('formbricks_api_host');
-		 
-		 if (!empty($environment_id) && !empty($api_host)) {
-			 wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/formbricks.js', array('jquery'), $this->version, false);
-		 }
+			if (!empty($environment_id) && !empty($api_host)) {
+				wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/formbricks.js', array('jquery'), $this->version, false);
+			}
+		}
 	}
-
 }
