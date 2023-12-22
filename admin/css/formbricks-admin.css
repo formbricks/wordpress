@@ -13,6 +13,7 @@
     margin-bottom:10px
  }
 
+
 /* Style for the test button */
 .test-button {
    cursor: pointer;
@@ -21,6 +22,14 @@
    color: white !important;
    padding: 8px 16px;
    margin-right: 10px;
+   border-radius: 5px;
+   width: 10%;
+   height: 40px;
+}
+
+.test-button:hover {
+   background-color: #02d9c7 !important;
+   color: black !important;
 }
 
 .save-button{
@@ -30,6 +39,13 @@
    color: white !important;
    padding: 8px 16px !important;
    margin-right: 10px !important;
+   border-radius: 5px !important;
+   width: 10% !important;
+   height: 40px !important;
+}
+
+.save-button:hover {
+   background-color: #222222 !important;
 }
 
 /* save button disabled state */
@@ -41,6 +57,9 @@
    color: white !important;
    padding: 8px 16px !important;
    margin-right: 10px !important;
+   border-radius: 5px !important;
+   width: 10% !important;
+   height: 40px !important;
 }
 
 /* Style for the input fields */

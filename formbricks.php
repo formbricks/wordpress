@@ -175,6 +175,15 @@ function formbricks_settings_page_content()
                 <div style="margin-top: 20px;">
                     <input type="submit" class="save-button" value="Save Changes" />
                 </div>
+                <div style="margin-top: 20px;">
+                <b>What now?</b>
+                    <p>
+                        Create a survey on Formbricks to display on your website. <a href="https://app.formbricks.com" target="_blank">Here is a step by step guide</a>
+                    </p>
+                    <p>
+                        Help needed? <a href="https://formbricks.com/discord" target="_blank">Join our Discord Community</a>
+                    </p>
+                </div>
             </form>
         </div>
     </div>
@@ -190,39 +199,53 @@ function formbricks_settings_page_content()
 
     <script>
         jQuery(document).ready(function($) {
+            // Function to handle ping response and update UI
+            function handlePingResponse(response) {
+                var enableSaveChanges = response && response.data && response.data.product;
+
+                $('#formbricks-ping-result').html(enableSaveChanges ?
+                    '<span style="color: green;">Test Request Success! Click the Save Changes Button</span>' :
+                    '<span style="color: red;">Error: Invalid response format or Debug Mode is not enabled!</span>'
+                );
+
+                $('#formbricks-save-changes').prop('disabled', !enableSaveChanges);
+            }
+
+            // Function to handle ping error and update UI
+            function handlePingError() {
+                $('#formbricks-ping-result').html('<span style="color: red;">Test Request Failed! Make sure both field values are correct!</span>');
+                $('#formbricks-save-changes').prop('disabled', true);
+            }
+
+            // Event binding for the "Test Ping" button
             $('#formbricks-test-ping').on('click', function() {
                 var environmentId = $('#formbricks_environment_id').val();
                 var apiHost = $('#formbricks_api_host').val();
+                var debugMode = $('#formbricks_debug').is(':checked'); // Check if debug mode is enabled
                 apiHost = apiHost.replace(/\/$/, '');
 
                 if (environmentId && apiHost) {
+                    // Perform AJAX request
                     $.ajax({
                         url: apiHost + '/api/v1/client/' + environmentId + '/in-app/sync',
                         type: 'GET',
-                        dataType: 'json', // Specify JSON dataType
+                        dataType: 'json',
                         success: function(response) {
                             handlePingResponse(response);
                         },
                         error: function(xhr, status, error) {
-                            $('#formbricks-ping-result').html('<span style="color: red;">Test Request Failed! Make sure both field values are correct!0</span>');
-                            $('#formbricks-save-changes').prop('disabled', true);
+                            handlePingError();
                         }
                     });
                 } else {
-                    $('#formbricks-ping-result').html('<span style="color: red;">Please enter Environment ID and API Host!</span>');
-                    $('#formbricks-save-changes').prop('disabled', true);
+                    handlePingError();
                 }
             });
 
-            function handlePingResponse(response) {
-                if (response && response.data && response.data.product) {
-                    $('#formbricks-ping-result').html('<span style="color: green;">Test Request Success! Click the Save Changes Button</span>');
-                    $('#formbricks-save-changes').prop('disabled', false);
-                } else {
-                    $('#formbricks-ping-result').html('<span style="color: red;">Error: Invalid response format!</span>');
-                    $('#formbricks-save-changes').prop('disabled', true);
-                }
-            }
+            $('#formbricks_debug').on('change', function() {
+                $('#formbricks-save-changes').prop('disabled', false);
+            });
+
         });
     </script>
 
