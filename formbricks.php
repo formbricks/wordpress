@@ -10,7 +10,7 @@
  * Plugin Name:       Formbricks
  * Plugin URI:        https://formbricks.com
  * Description:       WordPress Plugin for Formbricks | An open source Survey toolbox
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            mcnaveen
  * Author Email:	  me@mcnaveen.com
  * Author URI:        https://github.com/mcnaveen/
@@ -30,7 +30,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('FORMBRICKS_VERSION', '1.0.0');
+define('FORMBRICKS_VERSION', '1.0.1');
 
 /**
  * The code that runs during plugin activation.
@@ -242,8 +242,17 @@ function formbricks_settings_page_content()
                 }
             });
 
+            // Event binding for the "Debug Mode" checkbox
             $('#formbricks_debug').on('change', function() {
                 $('#formbricks-save-changes').prop('disabled', false);
+            });
+
+
+            // Event binding for the "Save Changes" button
+            $('#formbricks-save-changes').on('click', function() {
+                // Remove trailing slash from the apiHost
+                var apiHost = $('#formbricks_api_host').val();
+                $('#formbricks_api_host').val(apiHost.replace(/\/$/, ''));
             });
 
         });
