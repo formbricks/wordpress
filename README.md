@@ -1,38 +1,29 @@
-<p align="center">
-<a href="https://github.com/formbricks/formbricks">
-    <img width="120" alt="Formbricks Logo" src="https://github.com/formbricks/formbricks/assets/72809645/0086704f-bee7-4d38-9cc8-fa42ee59e004">
-  </a>
-  <h3 align="center">Formbricks WordPress Plugin</h3>
+=== Formbricks ===
+Contributors: mcnaveen
+Donate link: https://github.com/mcnaveen/
+Tags: survey, feedback, experience management
+Requires at least: 3.0.1
+Tested up to: 3.4
+Stable tag: 4.3
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-  <!-- <p align="center">
-    <a href="https://formbricks.com/">Website</a>  |  <a href="https://formbricks.com/discord">Join Discord community</a>
-  </p> -->
-</p>
+Formbricks wordpress plugin. Run targeted surveys on any WordPress page.
 
-<br/>
+== Description ==
 
-This is the official WordPress plugin for [Formbricks](https://github.com/formbricks/formbricks). Now embed Formbricks right into your WordPress websites.
+Formbricks is an open source survey and experience management platform. This plugin allows you to easily run targeted surveys on any subpage and at any point of the user journey. The easiest way to run website surveys with Formbricks is using the free Formbricks Cloud. A full step-by-step manual is linked to in the plugin settings.
 
-> Note: The plugin is not yet available on the WordPress plugin store. Please follow the steps below to install it.
+== Installation ==
 
-## 📖 What is Formbricks?
+- Make the whole directory as `.zip`
 
-Formbricks is a free and open source surveying platform. Gather feedback at every point in the user journey with beautiful in-app, website, link and email surveys. Build on top of Formbricks or leverage prebuilt data analysis capabilities.
+- In the Dashboard > Plugins > Upload the `formbricks.zip`
 
-## 🚀 Installation
+or Upload the whole folder to wp-contents > plugins folder
 
-1. Download the ZIP on your machine by clicking [here](https://github.com/formbricks/wordpress/archive/refs/heads/main.zip).
-2. Go to your WordPress admin panel and click on Plugins > Add New.
-3. Click on Upload Plugin and select the ZIP file you just downloaded.
-4. Click on Install Now and then Activate Plugin.
-5. Go to Settings > Formbricks.
-6. Enter your Formbricks Environment Id & API Host and Test the connection, once its tested, save it!
-7. You have now successfully installed the Formbricks plugin on your WordPress website.
+== Changelog ==
 
-## ✍️ Credits
+= 0.1.0
 
-We'd like to thank [MC Naveen](https://github.com/mcnaveen) for their valuable contributions to this plugin.
-
-## 📝 License
-
-This project is licensed under the GNU License - see the [LICENSE](./LICENSE.txt) file for details.
+- Basic version
