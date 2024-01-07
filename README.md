@@ -1,5 +1,4 @@
 === Formbricks ===
-
 Contributors: mcnaveen
 Donate link: https://github.com/mcnaveen/
 Tags: survey, feedback, experience management
