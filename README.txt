@@ -1,5 +1,5 @@
 === Formbricks ===
-Contributors: mcnaveen
+Contributors: formbricks, mcnaveen
 Tags: survey, feedback, experience management
 Tested up to: 5.4
 Stable tag: 1.0

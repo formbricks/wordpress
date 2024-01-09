@@ -29,3 +29,8 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+delete_option('formbricks_environment_id');
+delete_option('formbricks_api_host');
+delete_option('formbricks_debug');
+delete_option('formbricks_global_toggle');
