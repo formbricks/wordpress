@@ -1,23 +1,16 @@
 <?php
 
-/**
- *
- * @link              https://github.com/formbricks/wordpress
- * @since             1.0.0
- * @package           Formbricks
- *
- * @wordpress-plugin
+/*
+
  * Plugin Name:       Formbricks
- * Plugin URI:        https://formbricks.com
- * Description:       WordPress Plugin for Formbricks | An open source Survey toolbox
- * Version:           1.0.1
- * Author:            mcnaveen
- * Author Email:	  me@mcnaveen.com
- * Author URI:        https://github.com/mcnaveen/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       formbricks
- * Domain Path:       /languages
+ * Plugin URI:        https://github.com/formbricks/wordpress
+ * Description:       Official WordPress Plugin for Formbricks | An Open Source Survey Platform
+ * Version:           1.0.0
+ * Author:            Formbricks
+ * Author Email:	  hola@formbricks.com
+ * Author URI:        https://formbricks.com
+ * License:           GPL v2
+ * License URI:       https://raw.githubusercontent.com/formbricks/wordpress/main/LICENSE.txt
  */
 
 // If this file is called directly, abort.
@@ -30,7 +23,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('FORMBRICKS_VERSION', '1.0.1');
+define('FORMBRICKS_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
