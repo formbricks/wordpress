@@ -7,7 +7,7 @@
  * Description:       Official WordPress Plugin for Formbricks | An Open Source Survey Platform
  * Version:           1.0.0
  * Author:            Formbricks
- * Author Email:	  hola@formbricks.com
+ * Author Email:      hola@formbricks.com
  * Author URI:        https://formbricks.com
  * License:           GPL v2
  * License URI:       https://raw.githubusercontent.com/formbricks/wordpress/main/LICENSE.txt
