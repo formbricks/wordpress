@@ -171,7 +171,7 @@ function formbricks_settings_page_content()
                 <div style="margin-top: 20px;">
                 <b>What now?</b>
                     <p>
-                        Create a survey on Formbricks to display on your website. <a href="https://app.formbricks.com" target="_blank">Here is a step by step guide</a>
+                        Create a survey on Formbricks to display on your website. <a href="https://formbricks.com/docs/integrations/wordpress" target="_blank">Here is a step by step guide</a>
                     </p>
                     <p>
                         Help needed? <a href="https://formbricks.com/discord" target="_blank">Join our Discord Community</a>
