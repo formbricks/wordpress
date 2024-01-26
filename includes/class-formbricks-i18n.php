@@ -6,7 +6,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       https://github.com/mcnaveen
+ * @link       https://github.com/formbricks/wordpress
  * @since      1.0.0
  *
  * @package    Formbricks
