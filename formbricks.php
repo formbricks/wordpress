@@ -10,7 +10,7 @@
  * Author Email:      hola@formbricks.com
  * Author URI:        https://formbricks.com
  * License:           GPL v2
- * License URI:       https://raw.githubusercontent.com/formbricks/wordpress/main/LICENSE.txt
+ * License URI:       ./LICENSE.txt
  */
 
 // If this file is called directly, abort.
