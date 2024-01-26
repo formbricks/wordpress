@@ -3,7 +3,7 @@
 /**
  * Fired during plugin deactivation
  *
- * @link       https://github.com/mcnaveen
+ * @link       https://github.com/formbricks/wordpress
  * @since      1.0.0
  *
  * @package    Formbricks

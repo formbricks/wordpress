@@ -3,7 +3,7 @@
 /**
  * Register all actions and filters for the plugin
  *
- * @link       https://github.com/mcnaveen
+ * @link       https://github.com/formbricks/wordpress
  * @since      1.0.0
  *
  * @package    Formbricks
