@@ -70,7 +70,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-formbricks.php';
     $plugin = new Formbricks();
     $plugin->run();
 }
-run_formbricks();
+formbricks_run_plugin();
 
 
 function formbricks_admin_settings_page()
