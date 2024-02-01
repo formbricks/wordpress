@@ -29,7 +29,7 @@ define('FORMBRICKS_VERSION', '1.0.0');
  * The code that runs during plugin activation.
  * This action is documented in includes/class-formbricks-activator.php
  */
-function activate_formbricks()
+function formbricks_activate_plugin()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/class-formbricks-activator.php';
     Formbricks_Activator::activate();
@@ -39,14 +39,14 @@ function activate_formbricks()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-formbricks-deactivator.php
  */
-function deactivate_formbricks()
+function formbricks_deactivate_plugin()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/class-formbricks-deactivator.php';
     Formbricks_Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_formbricks');
-register_deactivation_hook(__FILE__, 'deactivate_formbricks');
+register_activation_hook(__FILE__, 'formbricks_activate_plugin');
+register_deactivation_hook(__FILE__, 'formbricks_deactivate_plugin');
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -64,13 +64,13 @@ require plugin_dir_path(__FILE__) . 'includes/class-formbricks.php';
  * @since    1.0.0
  */
 
-function run_formbricks()
-{
+ function formbricks_run_plugin()
+ {
 
     $plugin = new Formbricks();
     $plugin->run();
 }
-run_formbricks();
+formbricks_run_plugin();
 
 
 function formbricks_admin_settings_page()
