@@ -12,13 +12,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // e.parentNode.insertBefore(t, e);
 
     window.addEventListener("load", function () {
-      setTimeout(function () {
-        window.formbricks.init({
-          environmentId: formbricksPluginSettings.environmentId,
-          apiHost: formbricksPluginSettings.apiHost,
-          debug: Boolean(formbricksPluginSettings.debug),
-        });
-      }, 500);
+      if (
+        formbricksPluginSettings &&
+        formbricksPluginSettings.environmentId &&
+        formbricksPluginSettings.apiHost
+      ) {
+        setTimeout(function () {
+          window.formbricks.init({
+            environmentId: formbricksPluginSettings.environmentId,
+            apiHost: formbricksPluginSettings.apiHost,
+            debug: Boolean(formbricksPluginSettings.debug),
+          });
+        }, 500);
+      }
     });
   }
 });
