@@ -293,28 +293,28 @@ function formbricks_enqueue_script()
             $debug = boolval(get_option('formbricks_debug') == 'on');
 
             if (!empty($environmentId) && !empty($apiHost)) {
-                 // Enqueue formbricks.umd.js and localize formbricksPluginSettings
+                 // Formbricks.umd.js should be loaded first to avoid the js errors
                  wp_enqueue_script(
                     'formbricks',
                     plugin_dir_url(__FILE__) . 'public/js/formbricks.umd.js',
                     array('jquery'),
                     '1.0.0',
-                    true // Load script in the footer
+                    true
                 );
 
-                  // Enqueue index.js after formbricks.umd.js
+                  // Enqueue index.js after formbricks.umd.js 
                   wp_enqueue_script(
                     'formbricks-init',
                     plugin_dir_url(__FILE__) . 'public/js/index.js',
                     array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
                     '1.0.0',
-                    true // Load script in the footer
+                    true
                 );
 
                 wp_localize_script('formbricks', 'formbricksPluginSettings', array(
                     'environmentId' => $environmentId,
                     'apiHost' => $apiHost,
-                    'debug' => $debug // No need for boolval here, it's already boolean
+                    'debug' => $debug
                 ));
 
               
