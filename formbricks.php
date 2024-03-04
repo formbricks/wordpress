@@ -293,19 +293,31 @@ function formbricks_enqueue_script()
             $debug = boolval(get_option('formbricks_debug') == 'on');
 
             if (!empty($environmentId) && !empty($apiHost)) {
-                wp_enqueue_script(
-                    'formbricks-script',
-                    plugin_dir_url(__FILE__) . 'public/js/formbricks.js',
+                 // Enqueue formbricks.umd.js and localize formbricksPluginSettings
+                 wp_enqueue_script(
+                    'formbricks',
+                    plugin_dir_url(__FILE__) . 'public/js/formbricks.umd.js',
                     array('jquery'),
                     '1.0.0',
                     true // Load script in the footer
                 );
 
-                wp_localize_script('formbricks-script', 'formbricksPluginSettings', array(
+                  // Enqueue index.js after formbricks.umd.js
+                  wp_enqueue_script(
+                    'formbricks-init',
+                    plugin_dir_url(__FILE__) . 'public/js/index.js',
+                    array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
+                    '1.0.0',
+                    true // Load script in the footer
+                );
+
+                wp_localize_script('formbricks', 'formbricksPluginSettings', array(
                     'environmentId' => $environmentId,
                     'apiHost' => $apiHost,
-                    'debug' => boolval($debug)
+                    'debug' => $debug // No need for boolval here, it's already boolean
                 ));
+
+              
             }
         } else {
             // Formbricks is disabled

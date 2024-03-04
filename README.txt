@@ -29,7 +29,7 @@ The remote JavaScript file is essential for the operation of the Formbricks surv
 == Changelog ==
 
 = 1.0.0 =
-* Launching the Formbricks Wordpress Plugin
+* Launching the Formbricks WordPress Plugin
 
 == Upgrade Notice ==
 
