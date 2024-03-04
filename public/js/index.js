@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.formbricks.init({
           environmentId: formbricksPluginSettings.environmentId,
           apiHost: formbricksPluginSettings.apiHost,
-          debug: Boolean(formbricksPluginSettings.debug),
         });
       }, 500);
     });

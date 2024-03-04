@@ -127,14 +127,6 @@ function formbricks_settings_page_content()
                         <input type="text" name="formbricks_api_host" id="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" />
                     </div>
                     <div style="margin-top: 20px;">
-                        <b>Debug Mode</b>
-                        <p>If you toggle on Debug Mode, Formbricks will log everything it does in the browser console. Only activate this for testing purposes.</p>
-                        <label class="toggle-switch">
-                            <input type="checkbox" name="formbricks_debug" id="formbricks_debug" <?php checked(get_option('formbricks_debug'), 'on'); ?> />
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div style="margin-top: 20px;">
                         <button type="button" id="formbricks-test-ping" class="test-button">Check Connection</button>
                         <button type="submit" id="formbricks-save-changes" class="save-button" disabled>Save Changes</button>
                         <p id="formbricks-ping-result"></p>
@@ -198,7 +190,7 @@ function formbricks_settings_page_content()
 
                 $('#formbricks-ping-result').html(enableSaveChanges ?
                     '<span style="color: green;">Test Request Success! Click the Save Changes Button</span>' :
-                    '<span style="color: red;">Error: Invalid response format or Debug Mode is not enabled!</span>'
+                    '<span style="color: red;">Error: Invalid response format!</span>'
                 );
 
                 $('#formbricks-save-changes').prop('disabled', !enableSaveChanges);
@@ -214,7 +206,6 @@ function formbricks_settings_page_content()
             $('#formbricks-test-ping').on('click', function() {
                 var environmentId = $('#formbricks_environment_id').val();
                 var apiHost = $('#formbricks_api_host').val();
-                var debugMode = $('#formbricks_debug').is(':checked'); // Check if debug mode is enabled
                 apiHost = apiHost.replace(/\/$/, '');
 
                 if (environmentId && apiHost) {
@@ -234,12 +225,6 @@ function formbricks_settings_page_content()
                     handlePingError();
                 }
             });
-
-            // Event binding for the "Debug Mode" checkbox
-            $('#formbricks_debug').on('change', function() {
-                $('#formbricks-save-changes').prop('disabled', false);
-            });
-
 
             // Event binding for the "Save Changes" button
             $('#formbricks-save-changes').on('click', function() {
@@ -271,7 +256,6 @@ function formbricks_register_settings()
 {
     register_setting('formbricks_settings_group', 'formbricks_environment_id', 'sanitize_text_field');
     register_setting('formbricks_settings_group', 'formbricks_api_host', 'esc_url_raw');
-    register_setting('formbricks_settings_group', 'formbricks_debug');
 }
 
 add_action('admin_menu', 'formbricks_admin_settings_page');
@@ -290,7 +274,6 @@ function formbricks_enqueue_script()
             // Get options
             $environmentId = get_option('formbricks_environment_id');
             $apiHost = get_option('formbricks_api_host');
-            $debug = boolval(get_option('formbricks_debug') == 'on');
 
             if (!empty($environmentId) && !empty($apiHost)) {
                  // Formbricks.umd.js should be loaded first to avoid the js errors
@@ -314,7 +297,6 @@ function formbricks_enqueue_script()
                 wp_localize_script('formbricks', 'formbricksPluginSettings', array(
                     'environmentId' => $environmentId,
                     'apiHost' => $apiHost,
-                    'debug' => $debug
                 ));
 
               
