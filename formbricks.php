@@ -23,7 +23,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('FORMBRICKS_VERSION', '1.0.0');
+define('FORMBRICKS_VERSION', '1.0.1');
 
 /**
  * The code that runs during plugin activation.
@@ -275,32 +275,29 @@ function formbricks_enqueue_script()
             $environmentId = get_option('formbricks_environment_id');
             $apiHost = get_option('formbricks_api_host');
 
-            if (!empty($environmentId) && !empty($apiHost)) {
-                 // Formbricks.umd.js should be loaded first to avoid the js errors
-                 wp_enqueue_script(
-                    'formbricks',
-                    plugin_dir_url(__FILE__) . 'public/js/formbricks.umd.js',
-                    array('jquery'),
-                    '1.0.0',
-                    true
-                );
+	        if (!empty($environmentId) && !empty($apiHost)) {
+		        wp_enqueue_script(
+			        'formbricks',
+			        $apiHost . '/api/packages/website',
+			        array('jquery'),
+			        '1.0.0',
+			        true
+		        );
 
-                  // Enqueue index.js after formbricks.umd.js 
-                  wp_enqueue_script(
-                    'formbricks-init',
-                    plugin_dir_url(__FILE__) . 'public/js/index.js',
-                    array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
-                    '1.0.0',
-                    true
-                );
+		        // Enqueue index.js after formbricks
+		        wp_enqueue_script(
+			        'formbricks-init',
+			        plugin_dir_url(__FILE__) . 'public/js/index.js',
+			        array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
+			        '1.0.0',
+			        true
+		        );
 
-                wp_localize_script('formbricks', 'formbricksPluginSettings', array(
-                    'environmentId' => $environmentId,
-                    'apiHost' => $apiHost,
-                ));
-
-              
-            }
+		        wp_add_inline_script( 'formbricks', 'const formbricksPluginSettings = ' . json_encode( array(
+				        'environmentId' => $environmentId,
+				        'apiHost' => $apiHost,
+			        ) ), 'before' );
+	        }
         } else {
             // Formbricks is disabled
         }
