@@ -5,7 +5,7 @@
  * Plugin Name:       Formbricks
  * Plugin URI:        https://github.com/formbricks/wordpress
  * Description:       Official WordPress Plugin for Formbricks | An Open Source Survey Platform
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Formbricks
  * Author Email:      hola@formbricks.com
  * Author URI:        https://formbricks.com
