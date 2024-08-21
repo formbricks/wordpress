@@ -17,6 +17,11 @@ if (!defined('WPINC')) {
     die;
 }
 
+// Increase the nonce lifespan to 1 day (86400 seconds)
+add_filter('csrf_token_lifespan', function() {
+    return 86400;
+});
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
@@ -89,12 +94,13 @@ function formbricks_settings_page_content()
 {
     $nonce = wp_create_nonce('formbricks_settings_nonce');
 
-    if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
-        if (check_admin_referer('formbricks_settings_nonce', 'formbricks_settings_nonce_field')) {
-            echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
-        } else {
-            echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
-        }
+    if (isset($_POST['formbricks_settings_nonce_field']) && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
+        // Nonce verification passed, process the form data
+        update_option('formbricks_environment_id', sanitize_text_field($_POST['formbricks_environment_id']));
+        update_option('formbricks_api_host', esc_url_raw($_POST['formbricks_api_host']));
+        echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
+    } else {
+        echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
     }
 ?>
     <div class="wrap">
@@ -256,7 +262,7 @@ function formbricks_settings_page_content()
 function formbricks_register_toggle_settings()
 {
     register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function($option) {
-        if (check_admin_referer('formbricks_toggle_nonce', 'formbricks_toggle_nonce_field')) {
+        if (isset($_POST['formbricks_toggle_nonce_field']) && wp_verify_nonce($_POST['formbricks_toggle_nonce_field'], 'formbricks_toggle_nonce')) {
             return $option;
         } else {
             add_settings_error('formbricks_global_toggle', 'formbricks_toggle_nonce_error', 'Error saving settings: Nonce verification failed. Please try again.');
