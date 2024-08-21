@@ -93,13 +93,14 @@ function formbricks_admin_settings_page()
 function formbricks_settings_page_content()
 {
     $nonce = wp_create_nonce('formbricks_settings_nonce');
+    $form_submitted = isset($_POST['formbricks_settings_nonce_field']);
 
-    if (isset($_POST['formbricks_settings_nonce_field']) && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
+    if ($form_submitted && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
         // Nonce verification passed, process the form data
         update_option('formbricks_environment_id', sanitize_text_field($_POST['formbricks_environment_id']));
         update_option('formbricks_api_host', esc_url_raw($_POST['formbricks_api_host']));
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
-    } else {
+    } elseif ($form_submitted) {
         echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
     }
 ?>
