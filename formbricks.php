@@ -293,7 +293,7 @@ function formbricks_enqueue_script() {
 				);
 
 				wp_add_inline_script( 'formbricks',
-					'const formbricksPluginSettings = ' . json_encode( array(
+					'const formbricksPluginSettings = ' . wp_json_encode( array(
 						'environmentId' => $environmentId,
 						'apiHost'       => $apiHost,
 					) ),
