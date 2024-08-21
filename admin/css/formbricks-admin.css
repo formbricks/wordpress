@@ -18,7 +18,7 @@
   cursor: pointer;
   border: 1px solid #02d9c7;
   background-color: #02b6a7 !important;
-  color: rgb(142, 89, 89) !important;
+  color: white !important;
   padding: 8px 16px;
   margin-right: 10px;
   border-radius: 5px;
@@ -57,7 +57,7 @@
   padding: 8px 16px !important;
   margin-right: 10px !important;
   border-radius: 5px !important;
-  width: 10% !important;
+  width: 150px !important;
   height: 40px !important;
 }
 
