@@ -90,9 +90,11 @@ function formbricks_settings_page_content()
     $nonce = wp_create_nonce('formbricks_settings_nonce');
 
     if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
-        // Verify the nonce
-        check_admin_referer('formbricks_settings_nonce', 'formbricks_settings_nonce_field');
-        echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
+        if (check_admin_referer('formbricks_settings_nonce', 'formbricks_settings_nonce_field')) {
+            echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
+        } else {
+            echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
+        }
     }
 ?>
     <div class="wrap">
@@ -254,9 +256,12 @@ function formbricks_settings_page_content()
 function formbricks_register_toggle_settings()
 {
     register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function($option) {
-        // Verify the nonce
-        check_admin_referer('formbricks_toggle_nonce', 'formbricks_toggle_nonce_field');
-        return $option;
+        if (check_admin_referer('formbricks_toggle_nonce', 'formbricks_toggle_nonce_field')) {
+            return $option;
+        } else {
+            add_settings_error('formbricks_global_toggle', 'formbricks_toggle_nonce_error', 'Error saving settings: Nonce verification failed. Please try again.');
+            return get_option('formbricks_global_toggle');
+        }
     });
 }
 
