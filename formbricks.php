@@ -148,8 +148,9 @@ function formbricks_settings_page_content()
                             value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" />
                     </div>
                     <div style="margin-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center;">
                             <button type="button" id="formbricks-test-ping" class="test-button">Check Connection</button>
+                            <div style="margin-left: 10px;"></div>
                             <button type="submit" id="formbricks-save-changes" class="save-button" disabled>Save
                                 Changes</button>
                         </div>
