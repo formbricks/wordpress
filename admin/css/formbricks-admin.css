@@ -3,132 +3,131 @@
  * included in this file.
  */
 
- .body{
-    background-color: black;
- }
+.body {
+  background-color: black;
+}
 
- .container {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom:10px
- }
-
+.container {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+}
 
 /* Style for the test button */
 .test-button {
-   cursor: pointer;
-   border: 1px solid #02d9c7;
-   background-color: #02b6a7 !important;
-   color: white !important;
-   padding: 8px 16px;
-   margin-right: 10px;
-   border-radius: 5px;
-   width: 10%;
-   height: 40px;
+  cursor: pointer;
+  border: 1px solid #02d9c7;
+  background-color: #02b6a7 !important;
+  color: white !important;
+  padding: 8px 16px;
+  margin-right: 10px;
+  border-radius: 5px;
+  width: 150px;
+  height: 40px;
 }
 
 .test-button:hover {
-   background-color: #02d9c7 !important;
-   color: black !important;
+  background-color: #02d9c7 !important;
+  color: black !important;
 }
 
-.save-button{
-   cursor: pointer !important;
-   border: none !important;
-   background-color: #323232 !important;
-   color: white !important;
-   padding: 8px 16px !important;
-   margin-right: 10px !important;
-   border-radius: 5px !important;
-   width: 10% !important;
-   height: 40px !important;
+.save-button {
+  cursor: pointer !important;
+  border: none !important;
+  background-color: #323232 !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  border-radius: 5px !important;
+  width: 150px !important;
+  height: 40px !important;
 }
 
 .save-button:hover {
-   background-color: #222222 !important;
+  background-color: #222222 !important;
 }
 
 /* save button disabled state */
 
-.save-button[disabled]{
-   cursor: not-allowed !important;
-   border: none !important;
-   background-color: #cacaca !important;
-   color: white !important;
-   padding: 8px 16px !important;
-   margin-right: 10px !important;
-   border-radius: 5px !important;
-   width: 10% !important;
-   height: 40px !important;
+.save-button[disabled] {
+  cursor: not-allowed !important;
+  border: none !important;
+  background-color: #cacaca !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  margin-right: 10px !important;
+  border-radius: 5px !important;
+  width: 150px !important;
+  height: 40px !important;
 }
 
 /* Style for the input fields */
 input[type="text"] {
-   width: 50%;
-   padding: 8px;
-   margin-top: 8px;
-   box-sizing: border-box;
+  width: 50%;
+  padding: 8px;
+  margin-top: 8px;
+  box-sizing: border-box;
 }
 
 /* Style for the Save Changes button */
 #formbricks-save-changes {
-   cursor: pointer;
-   border: 1px solid #02d9c7;
-   background-color: #02d9c7;
-   color: black;
-   padding: 8px 16px;
-   margin-top: 10px;
+  cursor: pointer;
+  border: 1px solid #02d9c7;
+  background-color: #02d9c7;
+  color: black;
+  padding: 8px 16px;
+  margin-top: 10px;
 }
 
- .toggle-switch {
-   position: relative;
-   display: inline-block;
-   width: 60px;
-   height: 34px;
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
 
 .toggle-switch input {
-   opacity: 0;
-   width: 0;
-   height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-   position: absolute;
-   cursor: pointer;
-   top: 0;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   background-color: #ccc;
-   -webkit-transition: .4s;
-   transition: .4s;
-   border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
 }
 
 .slider:before {
-   position: absolute;
-   content: "";
-   height: 26px;
-   width: 26px;
-   left: 4px;
-   bottom: 4px;
-   background-color: white;
-   -webkit-transition: .4s;
-   transition: .4s;
-   border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-   background-color: #02d9c7;
+  background-color: #02d9c7;
 }
 
 input:focus + .slider {
-   box-shadow: 0 0 1px #02d9c7;
+  box-shadow: 0 0 1px #02d9c7;
 }
 
 input:checked + .slider:before {
-   -webkit-transform: translateX(26px);
-   -ms-transform: translateX(26px);
-   transform: translateX(26px);
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
 }

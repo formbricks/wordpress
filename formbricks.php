@@ -18,7 +18,7 @@ if (!defined('WPINC')) {
 }
 
 // Increase the nonce lifespan to 1 day (86400 seconds)
-add_filter('csrf_token_lifespan', function() {
+add_filter('csrf_token_lifespan', function () {
     return 86400;
 });
 
@@ -68,8 +68,8 @@ require plugin_dir_path(__FILE__) . 'includes/class-formbricks.php';
  * @since    1.0.0
  */
 
- function formbricks_run_plugin()
- {
+function formbricks_run_plugin()
+{
 
     $plugin = new Formbricks();
     $plugin->run();
@@ -93,16 +93,17 @@ function formbricks_admin_settings_page()
 function formbricks_settings_page_content()
 {
     $nonce = wp_create_nonce('formbricks_settings_nonce');
+    $form_submitted = isset($_POST['formbricks_settings_nonce_field']);
 
-    if (isset($_POST['formbricks_settings_nonce_field']) && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
+    if ($form_submitted && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
         // Nonce verification passed, process the form data
         update_option('formbricks_environment_id', sanitize_text_field($_POST['formbricks_environment_id']));
         update_option('formbricks_api_host', esc_url_raw($_POST['formbricks_api_host']));
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
-    } else {
+    } elseif ($form_submitted) {
         echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
     }
-?>
+    ?>
     <div class="wrap">
         <h2>Formbricks Settings</h2>
 
@@ -112,10 +113,14 @@ function formbricks_settings_page_content()
             <p>To run targeted surveys on your website, you need to complete the following steps:</p>
 
             <ul>
-                <li>1. Free Formbricks Account (No Credit Card Needed) <a href="https://app.formbricks.com/auth/signup" target="_blank">Signup here</a></li>
-                <li>2. The <b>environment ID</b> of your account. You find it in your Formbricks account settings under "Setup Checklist"</li>
-                <li>3. The <b>API Host</b> When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only when you self-host Formbricks, it would be different</li>
-                <li>4. Here is a <a href="https://formbricks.com/docs/getting-started/framework-guides#prerequisites" target="_blank">detailed guide</a> on how to get started</li>
+                <li>1. Free Formbricks Account (No Credit Card Needed) <a href="https://app.formbricks.com/auth/signup"
+                        target="_blank">Signup here</a></li>
+                <li>2. The <b>environment ID</b> of your account. You find it in your Formbricks account settings under
+                    "Setup Checklist"</li>
+                <li>3. The <b>API Host</b> When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only
+                    when you self-host Formbricks, it would be different</li>
+                <li>4. Here is a <a href="https://formbricks.com/docs/getting-started/framework-guides#prerequisites"
+                        target="_blank">detailed guide</a> on how to get started</li>
             </ul>
         </div>
 
@@ -130,17 +135,24 @@ function formbricks_settings_page_content()
                 <div>
                     <div>
                         <b>Environment ID</b>
-                        <p>You can find your environment ID in your Formbricks account under "Setup Checklist". It looks like: clmyq4k....</p>
-                        <input type="text" name="formbricks_environment_id" id="formbricks_environment_id" value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" />
+                        <p>You can find your environment ID in your Formbricks account under "Setup Checklist". It looks
+                            like: clmyq4k....</p>
+                        <input type="text" name="formbricks_environment_id" id="formbricks_environment_id"
+                            value="<?php echo esc_attr(get_option('formbricks_environment_id')); ?>" />
                     </div>
                     <div style="margin-top: 20px;">
                         <b>API Host</b>
-                        <p>When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only when you self-host Formbricks, it would be different</p>
-                        <input type="text" name="formbricks_api_host" id="formbricks_api_host" value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" />
+                        <p>When you use the Formbricks Cloud it is always "https://app.formbricks.com". Only when you
+                            self-host Formbricks, it would be different</p>
+                        <input type="text" name="formbricks_api_host" id="formbricks_api_host"
+                            value="<?php echo esc_attr(get_option('formbricks_api_host')); ?>" />
                     </div>
                     <div style="margin-top: 20px;">
-                        <button type="button" id="formbricks-test-ping" class="test-button">Check Connection</button>
-                        <button type="submit" id="formbricks-save-changes" class="save-button" disabled>Save Changes</button>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" id="formbricks-test-ping" class="test-button">Check Connection</button>
+                            <button type="submit" id="formbricks-save-changes" class="save-button" disabled>Save
+                                Changes</button>
+                        </div>
                         <p id="formbricks-ping-result"></p>
                     </div>
                 </div>
@@ -174,9 +186,11 @@ function formbricks_settings_page_content()
                     <input type="submit" class="save-button" value="Save Changes" />
                 </div>
                 <div style="margin-top: 20px;">
-                <b>What now?</b>
+                    <b>What now?</b>
                     <p>
-                        Create a survey on Formbricks to display on your website. <a href="https://formbricks.com/docs/integrations/wordpress" target="_blank">Here is a step by step guide</a>
+                        Create a survey on Formbricks to display on your website. <a
+                            href="https://formbricks.com/docs/integrations/wordpress" target="_blank">Here is a step by step
+                            guide</a>
                     </p>
                     <p>
                         Help needed? <a href="https://formbricks.com/discord" target="_blank">Join our Discord Community</a>
@@ -188,15 +202,15 @@ function formbricks_settings_page_content()
 
 
     <script>
-        jQuery(document).ready(function($) {
-            setTimeout(function() {
+        jQuery(document).ready(function ($) {
+            setTimeout(function () {
                 $('#formbricks-settings-saved').fadeOut('slow');
             }, 5000);
         });
     </script>
 
     <script>
-        jQuery(document).ready(function($) {
+        jQuery(document).ready(function ($) {
             // Function to handle ping response and update UI
             function handlePingResponse(response) {
                 var enableSaveChanges = response && response.data && response.data.product;
@@ -216,7 +230,7 @@ function formbricks_settings_page_content()
             }
 
             // Event binding for the "Test Ping" button
-            $('#formbricks-test-ping').on('click', function() {
+            $('#formbricks-test-ping').on('click', function () {
                 var environmentId = $('#formbricks_environment_id').val();
                 var apiHost = $('#formbricks_api_host').val();
                 apiHost = apiHost.replace(/\/$/, '');
@@ -227,10 +241,10 @@ function formbricks_settings_page_content()
                         url: apiHost + '/api/v1/client/' + environmentId + '/in-app/sync',
                         type: 'GET',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             handlePingResponse(response);
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             handlePingError();
                         }
                     });
@@ -240,7 +254,7 @@ function formbricks_settings_page_content()
             });
 
             // Event binding for the "Save Changes" button
-            $('#formbricks-save-changes').on('click', function() {
+            $('#formbricks-save-changes').on('click', function () {
                 // Remove trailing slash from the apiHost
                 var apiHost = $('#formbricks_api_host').val();
                 $('#formbricks_api_host').val(apiHost.replace(/\/$/, ''));
@@ -250,18 +264,18 @@ function formbricks_settings_page_content()
     </script>
 
     <script>
-        jQuery(document).ready(function($) {
-            setTimeout(function() {
+        jQuery(document).ready(function ($) {
+            setTimeout(function () {
                 $('#formbricks-settings-saved').fadeOut('slow');
             }, 5000);
         });
     </script>
-<?php
+    <?php
 }
 
 function formbricks_register_toggle_settings()
 {
-    register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function($option) {
+    register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function ($option) {
         if (isset($_POST['formbricks_toggle_nonce_field']) && wp_verify_nonce($_POST['formbricks_toggle_nonce_field'], 'formbricks_toggle_nonce')) {
             return $option;
         } else {
@@ -284,7 +298,8 @@ add_action('admin_init', 'formbricks_register_toggle_settings');
 
 
 // Enqueue JavaScript on the frontend
-function formbricks_enqueue_script() {
+function formbricks_enqueue_script()
+{
     if (!is_admin()) {
         // Check if the global toggle is on
         $globalToggle = get_option('formbricks_global_toggle');
@@ -292,7 +307,7 @@ function formbricks_enqueue_script() {
         if ($globalToggle == 'on') {
             // Get options
             $environmentId = get_option('formbricks_environment_id');
-            $apiHost       = get_option('formbricks_api_host');
+            $apiHost = get_option('formbricks_api_host');
 
             if (!empty($environmentId) && !empty($apiHost)) {
                 wp_enqueue_script(
@@ -312,10 +327,11 @@ function formbricks_enqueue_script() {
                     true
                 );
 
-                wp_add_inline_script('formbricks',
+                wp_add_inline_script(
+                    'formbricks',
                     'const formbricksPluginSettings = ' . wp_json_encode(array(
                         'environmentId' => $environmentId,
-                        'apiHost'       => $apiHost,
+                        'apiHost' => $apiHost,
                     )),
                     'before'
                 );
