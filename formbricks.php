@@ -1,7 +1,6 @@
 <?php
 
 /*
-
  * Plugin Name:       Formbricks
  * Plugin URI:        https://github.com/formbricks/wordpress
  * Description:       Official WordPress Plugin for Formbricks | An Open Source Survey Platform
@@ -88,7 +87,11 @@ function formbricks_admin_settings_page()
 
 function formbricks_settings_page_content()
 {
+    $nonce = wp_create_nonce('formbricks_settings_nonce');
+
     if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
+        // Verify the nonce
+        check_admin_referer('formbricks_settings_nonce', 'formbricks_settings_nonce_field');
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
     }
 ?>
@@ -111,6 +114,7 @@ function formbricks_settings_page_content()
         <!-- Configuration -->
         <div class="container">
             <form method="post" action="options.php">
+                <?php wp_nonce_field('formbricks_settings_nonce', 'formbricks_settings_nonce_field'); ?>
                 <?php settings_fields('formbricks_settings_group'); ?>
                 <?php do_settings_sections('formbricks-settings'); ?>
                 <h3>Configuration</h3>
@@ -138,6 +142,7 @@ function formbricks_settings_page_content()
         <!-- Enable Formbricks -->
         <div class="container">
             <form method="post" action="options.php">
+                <?php wp_nonce_field('formbricks_toggle_nonce', 'formbricks_toggle_nonce_field'); ?>
                 <?php settings_fields('formbricks_toggle_group'); ?>
                 <?php do_settings_sections('formbricks-toggle'); ?>
                 <h3>Enable Formbricks</h3>
@@ -248,7 +253,11 @@ function formbricks_settings_page_content()
 
 function formbricks_register_toggle_settings()
 {
-    register_setting('formbricks_toggle_group', 'formbricks_global_toggle');
+    register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function($option) {
+        // Verify the nonce
+        check_admin_referer('formbricks_toggle_nonce', 'formbricks_toggle_nonce_field');
+        return $option;
+    });
 }
 
 
@@ -265,44 +274,45 @@ add_action('admin_init', 'formbricks_register_toggle_settings');
 
 // Enqueue JavaScript on the frontend
 function formbricks_enqueue_script() {
-	if ( ! is_admin() ) {
-		// Check if the global toggle is on
-		$globalToggle = get_option( 'formbricks_global_toggle' );
+    if (!is_admin()) {
+        // Check if the global toggle is on
+        $globalToggle = get_option('formbricks_global_toggle');
 
-		if ( $globalToggle == 'on' ) {
-			// Get options
-			$environmentId = get_option( 'formbricks_environment_id' );
-			$apiHost       = get_option( 'formbricks_api_host' );
+        if ($globalToggle == 'on') {
+            // Get options
+            $environmentId = get_option('formbricks_environment_id');
+            $apiHost       = get_option('formbricks_api_host');
 
-			if ( ! empty( $environmentId ) && ! empty( $apiHost ) ) {
-				wp_enqueue_script(
-					'formbricks',
-					$apiHost . '/api/packages/website',
-					array( 'jquery' ),
-					'1.0.1',
-					true
-				);
+            if (!empty($environmentId) && !empty($apiHost)) {
+                wp_enqueue_script(
+                    'formbricks',
+                    $apiHost . '/api/packages/website',
+                    array('jquery'),
+                    '1.0.1',
+                    true
+                );
 
-				// Enqueue index.js after formbricks
-				wp_enqueue_script(
-					'formbricks-init',
-					plugin_dir_url( __FILE__ ) . 'public/js/index.js',
-					array( 'jquery', 'formbricks' ), // Add 'formbricks' as a dependency
-					'1.0.1',
-					true
-				);
+                // Enqueue index.js after formbricks
+                wp_enqueue_script(
+                    'formbricks-init',
+                    plugin_dir_url(__FILE__) . 'public/js/index.js',
+                    array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
+                    '1.0.1',
+                    true
+                );
 
-				wp_add_inline_script( 'formbricks',
-					'const formbricksPluginSettings = ' . wp_json_encode( array(
-						'environmentId' => $environmentId,
-						'apiHost'       => $apiHost,
-					) ),
-					'before' );
-			}
-		} else {
-			// Formbricks is disabled
-		}
-	}
+                wp_add_inline_script('formbricks',
+                    'const formbricksPluginSettings = ' . wp_json_encode(array(
+                        'environmentId' => $environmentId,
+                        'apiHost'       => $apiHost,
+                    )),
+                    'before'
+                );
+            }
+        } else {
+            // Formbricks is disabled
+        }
+    }
 }
 
 add_action('wp_enqueue_scripts', 'formbricks_enqueue_script');
