@@ -311,9 +311,9 @@ function formbricks_enqueue_script()
             if (!empty($environmentId) && !empty($apiHost)) {
                 wp_enqueue_script(
                     'formbricks',
-                    $apiHost . '/api/packages/website',
+                    $apiHost . '/js/formbricks.umd.cjs',
                     array('jquery'),
-                    '1.0.1',
+                    "3.0.1",
                     true
                 );
 
