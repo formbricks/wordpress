@@ -95,10 +95,11 @@ function formbricks_settings_page_content()
     $nonce = wp_create_nonce('formbricks_settings_nonce');
     $form_submitted = isset($_POST['formbricks_settings_nonce_field']);
 
-    if ($form_submitted && wp_verify_nonce($_POST['formbricks_settings_nonce_field'], 'formbricks_settings_nonce')) {
-        // Nonce verification passed, process the form data
-        update_option('formbricks_environment_id', sanitize_text_field($_POST['formbricks_environment_id']));
-        update_option('formbricks_api_host', esc_url_raw($_POST['formbricks_api_host']));
+    if ($form_submitted && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['formbricks_settings_nonce_field'])), 'formbricks_settings_nonce')) {
+        $environment_id = isset($_POST['formbricks_environment_id']) ? sanitize_text_field(wp_unslash($_POST['formbricks_environment_id'])) : '';
+        $api_host = isset($_POST['formbricks_api_host']) ? esc_url_raw(wp_unslash($_POST['formbricks_api_host'])) : '';
+        update_option('formbricks_environment_id', $environment_id);
+        update_option('formbricks_api_host', $api_host);
         echo '<div id="formbricks-settings-saved" class="updated notice is-dismissible"><p>Settings saved successfully!</p></div>';
     } elseif ($form_submitted) {
         echo '<div id="formbricks-settings-error" class="error notice is-dismissible"><p>Error saving settings: Nonce verification failed. Please try again.</p></div>';
@@ -238,7 +239,7 @@ function formbricks_settings_page_content()
                 if (environmentId && apiHost) {
                     // Perform AJAX request
                     $.ajax({
-                        url: apiHost + '/api/v1/client/' + environmentId + '/in-app/sync',
+                        url: apiHost + '/api/v1/client/' + environmentId + '/environment',
                         type: 'GET',
                         dataType: 'json',
                         success: function (response) {
@@ -276,7 +277,7 @@ function formbricks_settings_page_content()
 function formbricks_register_toggle_settings()
 {
     register_setting('formbricks_toggle_group', 'formbricks_global_toggle', function ($option) {
-        if (isset($_POST['formbricks_toggle_nonce_field']) && wp_verify_nonce($_POST['formbricks_toggle_nonce_field'], 'formbricks_toggle_nonce')) {
+        if (isset($_POST['formbricks_toggle_nonce_field']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['formbricks_toggle_nonce_field'])), 'formbricks_toggle_nonce')) {
             return $option;
         } else {
             add_settings_error('formbricks_global_toggle', 'formbricks_toggle_nonce_error', 'Error saving settings: Nonce verification failed. Please try again.');
@@ -301,28 +302,25 @@ add_action('admin_init', 'formbricks_register_toggle_settings');
 function formbricks_enqueue_script()
 {
     if (!is_admin()) {
-        // Check if the global toggle is on
         $globalToggle = get_option('formbricks_global_toggle');
 
         if ($globalToggle == 'on') {
-            // Get options
             $environmentId = get_option('formbricks_environment_id');
             $apiHost = get_option('formbricks_api_host');
 
             if (!empty($environmentId) && !empty($apiHost)) {
                 wp_enqueue_script(
                     'formbricks',
-                    $apiHost . '/api/packages/website',
+                    $apiHost . '/js/formbricks.umd.cjs',
                     array('jquery'),
-                    '1.0.1',
+                    "3.0.1",
                     true
                 );
 
-                // Enqueue index.js after formbricks
                 wp_enqueue_script(
                     'formbricks-init',
                     plugin_dir_url(__FILE__) . 'public/js/index.js',
-                    array('jquery', 'formbricks'), // Add 'formbricks' as a dependency
+                    array('jquery', 'formbricks'),
                     '1.0.1',
                     true
                 );
@@ -336,10 +334,19 @@ function formbricks_enqueue_script()
                     'before'
                 );
             }
-        } else {
-            // Formbricks is disabled
         }
     }
 }
 
 add_action('wp_enqueue_scripts', 'formbricks_enqueue_script');
+
+// Enqueue Scripts and Styles
+function formbricks_enqueue_admin_scripts($hook) {
+    if ('toplevel_page_formbricks-settings' !== $hook) {
+        return;
+    }
+    wp_enqueue_script('formbricks-admin', plugin_dir_url(__FILE__) . 'admin/js/formbricks-admin.js', array('jquery'), '1.0.1', true);
+    wp_add_inline_script('formbricks-admin', 'jQuery(document).ready(function ($) { setTimeout(function () { $("#formbricks-settings-saved").fadeOut("slow"); }, 5000); });');
+}
+
+add_action('admin_enqueue_scripts', 'formbricks_enqueue_admin_scripts');
