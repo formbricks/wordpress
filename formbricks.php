@@ -200,77 +200,6 @@ function formbricks_settings_page_content()
             </form>
         </div>
     </div>
-
-
-    <script>
-        jQuery(document).ready(function ($) {
-            setTimeout(function () {
-                $('#formbricks-settings-saved').fadeOut('slow');
-            }, 5000);
-        });
-    </script>
-
-    <script>
-        jQuery(document).ready(function ($) {
-            // Function to handle ping response and update UI
-            function handlePingResponse(response) {
-                var enableSaveChanges = response && response.data && response.data.product;
-
-                $('#formbricks-ping-result').html(enableSaveChanges ?
-                    '<span style="color: green;">Test Request Success! Click the Save Changes Button</span>' :
-                    '<span style="color: red;">Error: Invalid response format!</span>'
-                );
-
-                $('#formbricks-save-changes').prop('disabled', !enableSaveChanges);
-            }
-
-            // Function to handle ping error and update UI
-            function handlePingError() {
-                $('#formbricks-ping-result').html('<span style="color: red;">Test Request Failed! Make sure both field values are correct!</span>');
-                $('#formbricks-save-changes').prop('disabled', true);
-            }
-
-            // Event binding for the "Test Ping" button
-            $('#formbricks-test-ping').on('click', function () {
-                var environmentId = $('#formbricks_environment_id').val();
-                var apiHost = $('#formbricks_api_host').val();
-                apiHost = apiHost.replace(/\/$/, '');
-
-                if (environmentId && apiHost) {
-                    // Perform AJAX request
-                    $.ajax({
-                        url: apiHost + '/api/v1/client/' + environmentId + '/environment',
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (response) {
-                            handlePingResponse(response);
-                        },
-                        error: function (xhr, status, error) {
-                            handlePingError();
-                        }
-                    });
-                } else {
-                    handlePingError();
-                }
-            });
-
-            // Event binding for the "Save Changes" button
-            $('#formbricks-save-changes').on('click', function () {
-                // Remove trailing slash from the apiHost
-                var apiHost = $('#formbricks_api_host').val();
-                $('#formbricks_api_host').val(apiHost.replace(/\/$/, ''));
-            });
-
-        });
-    </script>
-
-    <script>
-        jQuery(document).ready(function ($) {
-            setTimeout(function () {
-                $('#formbricks-settings-saved').fadeOut('slow');
-            }, 5000);
-        });
-    </script>
     <?php
 }
 
@@ -313,25 +242,31 @@ function formbricks_enqueue_script()
                     'formbricks',
                     $apiHost . '/js/formbricks.umd.cjs',
                     array('jquery'),
-                    "3.0.1",
-                    true
+                    '3.0.1',
+                    array(
+                        'strategy' => 'defer',
+                        'in_footer' => true,
+                    )
                 );
 
                 wp_enqueue_script(
                     'formbricks-init',
                     plugin_dir_url(__FILE__) . 'public/js/index.js',
                     array('jquery', 'formbricks'),
-                    '1.0.1',
-                    true
+                    FORMBRICKS_VERSION,
+                    array(
+                        'strategy' => 'defer',
+                        'in_footer' => true,
+                    )
                 );
 
-                wp_add_inline_script(
+                wp_localize_script(
                     'formbricks',
-                    'const formbricksPluginSettings = ' . wp_json_encode(array(
+                    'formbricksPluginSettings',
+                    array(
                         'environmentId' => $environmentId,
                         'apiHost' => $apiHost,
-                    )),
-                    'before'
+                    )
                 );
             }
         }
@@ -345,8 +280,75 @@ function formbricks_enqueue_admin_scripts($hook) {
     if ('toplevel_page_formbricks-settings' !== $hook) {
         return;
     }
-    wp_enqueue_script('formbricks-admin', plugin_dir_url(__FILE__) . 'admin/js/formbricks-admin.js', array('jquery'), '1.0.1', true);
-    wp_add_inline_script('formbricks-admin', 'jQuery(document).ready(function ($) { setTimeout(function () { $("#formbricks-settings-saved").fadeOut("slow"); }, 5000); });');
+
+    // Enqueue jQuery
+    wp_enqueue_script('jquery');
+
+    // Enqueue admin script
+    wp_enqueue_script(
+        'formbricks-admin',
+        plugin_dir_url(__FILE__) . 'admin/js/formbricks-admin.js',
+        array('jquery'),
+        FORMBRICKS_VERSION,
+        true
+    );
+
+    // Add settings fade out script
+    wp_add_inline_script(
+        'formbricks-admin',
+        'jQuery(document).ready(function ($) { 
+            setTimeout(function () { 
+                $("#formbricks-settings-saved").fadeOut("slow"); 
+            }, 5000); 
+        });'
+    );
+
+    // Add ping test functionality
+    wp_add_inline_script(
+        'formbricks-admin',
+        'jQuery(document).ready(function ($) {
+            function handlePingResponse(response) {
+                var enableSaveChanges = response && response.data && response.data.product;
+                $("#formbricks-ping-result").html(enableSaveChanges ?
+                    "<span style=\"color: green;\">Test Request Success! Click the Save Changes Button</span>" :
+                    "<span style=\"color: red;\">Error: Invalid response format!</span>"
+                );
+                $("#formbricks-save-changes").prop("disabled", !enableSaveChanges);
+            }
+
+            function handlePingError() {
+                $("#formbricks-ping-result").html("<span style=\"color: red;\">Test Request Failed! Make sure both field values are correct!</span>");
+                $("#formbricks-save-changes").prop("disabled", true);
+            }
+
+            $("#formbricks-test-ping").on("click", function () {
+                var environmentId = $("#formbricks_environment_id").val();
+                var apiHost = $("#formbricks_api_host").val();
+                apiHost = apiHost.replace(/\/$/, "");
+
+                if (environmentId && apiHost) {
+                    $.ajax({
+                        url: apiHost + "/api/v1/client/" + environmentId + "/environment",
+                        type: "GET",
+                        dataType: "json",
+                        success: function (response) {
+                            handlePingResponse(response);
+                        },
+                        error: function (xhr, status, error) {
+                            handlePingError();
+                        }
+                    });
+                } else {
+                    handlePingError();
+                }
+            });
+
+            $("#formbricks-save-changes").on("click", function () {
+                var apiHost = $("#formbricks_api_host").val();
+                $("#formbricks_api_host").val(apiHost.replace(/\/$/, ""));
+            });
+        });'
+    );
 }
 
 add_action('admin_enqueue_scripts', 'formbricks_enqueue_admin_scripts');
