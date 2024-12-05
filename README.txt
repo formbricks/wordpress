@@ -7,6 +7,7 @@ License: GPLv2 or later
 License URI: https://github.com/formbricks/wordpress/blob/main/LICENSE.txt
 
 Official Formbricks WordPress plugin. Run targeted surveys on your WordPress sites instantly.
+Learn more about Formbricks at https://formbricks.com
 
 == Description ==
 
