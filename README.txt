@@ -12,7 +12,7 @@ Official Formbricks WordPress plugin. Run targeted surveys on your WordPress sit
 
 Formbricks is an open source survey and experience management platform. This plugin allows you to easily run targeted surveys on any subpage and at any point of the user journey. The easiest way to run website surveys with Formbricks is using the free Formbricks Cloud. A full step-by-step manual is linked to in the plugin settings. It loads the Formbricks SDK locally from this plugin & then allows you to run surveys on your website.
 
-Learn more about Formbricks at https://formbricks.com
+Learn more about Formbricks on [the official website](https://formbricks.com).
 
 == Frequently Asked Questions ==
 
