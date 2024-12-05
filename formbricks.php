@@ -303,21 +303,28 @@ function formbricks_enqueue_admin_scripts($hook) {
         });'
     );
 
-    // Add ping test functionality
     wp_add_inline_script(
         'formbricks-admin',
         'jQuery(document).ready(function ($) {
             function handlePingResponse(response) {
-                var enableSaveChanges = response && response.data && response.data.product;
-                $("#formbricks-ping-result").html(enableSaveChanges ?
+                var isValidResponse = response && (response.data || response.product || response.environmentId);
+                $("#formbricks-ping-result").html(isValidResponse ?
                     "<span style=\"color: green;\">Test Request Success! Click the Save Changes Button</span>" :
-                    "<span style=\"color: red;\">Error: Invalid response format!</span>"
+                    "<span style=\"color: red;\">Error: Could not validate environment ID!</span>"
                 );
-                $("#formbricks-save-changes").prop("disabled", !enableSaveChanges);
+                $("#formbricks-save-changes").prop("disabled", !isValidResponse);
             }
 
-            function handlePingError() {
-                $("#formbricks-ping-result").html("<span style=\"color: red;\">Test Request Failed! Make sure both field values are correct!</span>");
+            function handlePingError(xhr) {
+                var errorMessage = "Test Request Failed! ";
+                if (xhr.status === 404) {
+                    errorMessage += "Environment ID not found.";
+                } else if (xhr.status === 0) {
+                    errorMessage += "Could not connect to API host. Check the URL and try again.";
+                } else {
+                    errorMessage += "Make sure both field values are correct! (Status: " + xhr.status + ")";
+                }
+                $("#formbricks-ping-result").html("<span style=\"color: red;\">" + errorMessage + "</span>");
                 $("#formbricks-save-changes").prop("disabled", true);
             }
 
@@ -325,6 +332,8 @@ function formbricks_enqueue_admin_scripts($hook) {
                 var environmentId = $("#formbricks_environment_id").val();
                 var apiHost = $("#formbricks_api_host").val();
                 apiHost = apiHost.replace(/\/$/, "");
+
+                $("#formbricks-ping-result").html("<span style=\"color: blue;\">Testing connection...</span>");
 
                 if (environmentId && apiHost) {
                     $.ajax({
@@ -335,11 +344,12 @@ function formbricks_enqueue_admin_scripts($hook) {
                             handlePingResponse(response);
                         },
                         error: function (xhr, status, error) {
-                            handlePingError();
+                            handlePingError(xhr);
                         }
                     });
                 } else {
-                    handlePingError();
+                    $("#formbricks-ping-result").html("<span style=\"color: red;\">Please fill in both fields!</span>");
+                    $("#formbricks-save-changes").prop("disabled", true);
                 }
             });
 
