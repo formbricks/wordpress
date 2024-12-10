@@ -2,7 +2,7 @@
 Contributors: formbricks, mcnaveen, andrewnimmo
 Tags: survey, feedback, experience management
 Tested up to: 6.7.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://github.com/formbricks/wordpress/blob/main/LICENSE.txt
 
